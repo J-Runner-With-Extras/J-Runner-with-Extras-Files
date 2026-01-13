@@ -25,3 +25,10 @@ Don't expect this to work on a BB jasper, or any flavour of slim. The 1888 kerne
    - Reboot instead of freeze if the kernel hits a bugcheck
    - ping patch
    - patch update strings in xam to $$ystemUpdate
+
+## Credits
+
+- sk1080 for the GPU patches
+- dotprofile for the mostly labelled 1888 kernel/HV
+- InvoxiPlayGames for the usbdsec patch
+- Byrom90 for the 6770 compatible BladesDL I used as a base
