@@ -2,6 +2,16 @@ J-Runner with Extras Changelog
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+V3.4.0:
+- Added: HddSsAuth patch for 17559 to fix FATXPlorer formatted hard drives with security sectors + unused space
+- Added: 2.0.1838.1 XDK beta dashboard (Y1 GPU Only, see zip file + README.md within for details)
+- Added: 1888 Retail dashboard (Phat GPUs only)
+- Fixed: Corona glitch2m patch set for 17559, 15574, 13604
+- Fixed: Warn when PicoFlasher detects an unknown flashconfig on read or write
+- Added: Feature to inject an arbitrary RGH3 or RGH 1.3 ECC under the experimental menu
+- Added: JRunner will now read the CPU key from the virtual fuse set in the NAND image if a virtual fuse set was found
+- Added: JRunner will now parse early NAND images that have different magic bytes
+
 V3.4.0 rc0:
 - Fixed: Extraction of C-R.bin and key.bin for Winchester consoles now works
 - Added: Overclocked RGH3 ECCs (much better boot performance on phat consoles)
