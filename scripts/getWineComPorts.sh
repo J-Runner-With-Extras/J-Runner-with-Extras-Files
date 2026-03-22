@@ -1,10 +1,12 @@
 #!/bin/bash
 # find_jrunner_comport.sh
 # Usage: ./find_jrunner_comport.sh <VID> <PID> [output_file]
-# Example: ./find_jrunner_comport.sh 1234 5678
-# VID and PID should be 4-digit hex values (with or without 0x prefix)
+# Example: ./find_jrunner_comport.sh 1a86 55d3
+# VID and PID should be hex values (with or without 0x prefix)
 #
 # Output file defaults to /tmp/jrunner_comport.txt
+# One COM port per line, ordered by USB interface number (interface 0 first).
+# If a device exposes multiple interfaces with tty nodes, all are included.
 
 set -euo pipefail
 
@@ -20,11 +22,28 @@ VID=$(echo "$1" | sed 's/^0x//I' | tr '[:upper:]' '[:lower:]')
 PID=$(echo "$2" | sed 's/^0x//I' | tr '[:upper:]' '[:lower:]')
 OUTPUT_FILE="${3:-/tmp/jrunner_comport.txt}"
 
-# --- Find the tty device via sysfs ---
-# Search for the device in /sys/bus/usb/devices by matching idVendor and idProduct
-find_tty() {
+DOSDEVICES="${WINEPREFIX:-$HOME/.wine}/dosdevices"
+
+# ---------------------------------------------------------------------------
+# find_tty_devices_by_interface VID PID
+#
+# Walks /sys/bus/usb/devices/ to find every USB device matching VID:PID.
+# For each matching device, enumerates its interface sub-directories
+# (e.g. 1-2:1.0, 1-2:1.1 …).  The trailing digit after the dot is the
+# bInterfaceNumber.  Within each interface directory we look for a tty
+# sub-device and emit:
+#
+#   <interface_number> <tty_name>
+#
+# Lines are emitted in interface-number order so the caller can rely on
+# stable ordering even when sysfs readdir order varies.
+# ---------------------------------------------------------------------------
+find_tty_devices_by_interface() {
     local vid="$1"
     local pid="$2"
+
+    # Collect results as "ifnum ttyXXX" pairs, then sort numerically on ifnum
+    local results=()
 
     for dev_path in /sys/bus/usb/devices/*/; do
         local vendor_file="${dev_path}idVendor"
@@ -32,80 +51,116 @@ find_tty() {
 
         [[ -f "$vendor_file" && -f "$product_file" ]] || continue
 
-        local dev_vid
-        local dev_pid
-        dev_vid=$(cat "$vendor_file" | tr '[:upper:]' '[:lower:]')
-        dev_pid=$(cat "$product_file" | tr '[:upper:]' '[:lower:]')
+        local dev_vid dev_pid
+        dev_vid=$(tr '[:upper:]' '[:lower:]' < "$vendor_file")
+        dev_pid=$(tr '[:upper:]' '[:lower:]' < "$product_file")
 
-        if [[ "$dev_vid" == "$vid" && "$dev_pid" == "$pid" ]]; then
-            # Walk subdirectories looking for a tty device
-            local tty
-            tty=$(find "$dev_path" -name "tty*" -maxdepth 5 2>/dev/null \
-                  | grep -oP 'tty\w+' | grep -v '^tty$' | head -n1)
-            if [[ -n "$tty" ]]; then
-                echo "$tty"
-                return 0
+        [[ "$dev_vid" == "$vid" && "$dev_pid" == "$pid" ]] || continue
+
+        # dev_path is the root USB device dir (e.g. /sys/bus/usb/devices/1-2/)
+        # Interface dirs live directly beneath it, named <bus>-<port>:<cfg>.<iface>
+        # We enumerate them explicitly so we can capture the interface number.
+        local dev_name
+        dev_name=$(basename "$dev_path")
+
+        for iface_path in "${dev_path}"${dev_name}:*/; do
+            [[ -d "$iface_path" ]] || continue
+
+            # Extract bInterfaceNumber from the sysfs attribute if present,
+            # otherwise fall back to parsing the directory name suffix (.<N>).
+            local ifnum
+            if [[ -f "${iface_path}bInterfaceNumber" ]]; then
+                ifnum=$(cat "${iface_path}bInterfaceNumber")
+                # Remove leading zeros so sort -n works correctly
+                ifnum=$((10#$ifnum))
+            else
+                # Directory name pattern: 1-2:1.<N>
+                ifnum=$(basename "$iface_path" | grep -oP '\.\K[0-9]+$' || echo "999")
+                ifnum=$((10#$ifnum))
             fi
-        fi
+
+            # Look for a tty node anywhere under this interface directory
+            local tty
+            tty=$(find "$iface_path" -name "tty*" -maxdepth 6 2>/dev/null \
+                  | grep -oP '(?<=/)(tty[^/]+)' | grep -v '^tty$' | head -n1 || true)
+
+            [[ -n "$tty" ]] || continue
+
+            results+=("${ifnum} ${tty}")
+        done
     done
-    return 1
+
+    # Sort by interface number (numeric), then emit
+    printf '%s\n' "${results[@]}" | sort -n
 }
 
-TTY_DEV=$(find_tty "$VID" "$PID") || {
-    echo "Error: No tty device found for VID=$VID PID=$PID" >&2
-    exit 2
-}
-
-TTY_PATH="/dev/${TTY_DEV}"
-
-# --- Resolve the Wine COM port from the registry ---
-# Wine maps COM ports in: HKLM\Software\Wine\Ports  (or via symlinks in ~/.wine/dosdevices)
+# ---------------------------------------------------------------------------
+# resolve_jrunner_comport TTY_NAME
+#
+# Given a bare tty name (e.g. ttyUSB0), return the matching Wine COM port
+# (e.g. COM3).  Returns empty string if not found.
+# ---------------------------------------------------------------------------
 resolve_jrunner_comport() {
     local tty="$1"
+    local com_port=""
 
-    # Preferred: check dosdevices symlinks (works without wine reg tool)
-    local dosdevices
-    dosdevices="${WINEPREFIX:-$HOME/.wine}/dosdevices"
-
-    if [[ -d "$dosdevices" ]]; then
-        for link in "$dosdevices"/com*; do
+    # Strategy 1: dosdevices symlinks — fastest, no wine binary needed
+    if [[ -d "$DOSDEVICES" ]]; then
+        for link in "$DOSDEVICES"/com*; do
             [[ -L "$link" ]] || continue
             local target
             target=$(readlink -f "$link" 2>/dev/null || true)
-            if [[ "$target" == "/dev/$tty" || "$target" == "/dev/$(basename "$tty")" ]]; then
-                # Return just the COM port name in uppercase, e.g. COM3
-                basename "$link" | tr '[:lower:]' '[:upper:]'
-                return 0
+            if [[ "$target" == "/dev/$tty" ]]; then
+                com_port=$(basename "$link" | tr '[:lower:]' '[:upper:]')
+                break
             fi
         done
     fi
 
-    # Fallback: query the Wine registry
-    if command -v wine &>/dev/null; then
-        local reg_output
-        reg_output=$(wine reg query \
-            "HKEY_LOCAL_MACHINE\\Software\\Wine\\Ports" 2>/dev/null || true)
+    echo "$com_port"
+}
 
-        while IFS= read -r line; do
-            # Lines look like:  COM3    REG_SZ    /dev/ttyUSB0
-            if echo "$line" | grep -qi "/dev/$tty"; then
-                echo "$line" | awk '{print $1}' | tr '[:lower:]' '[:upper:]'
-                return 0
-            fi
-        done <<< "$reg_output"
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+# Build an ordered list of (ifnum, tty) pairs
+mapfile -t IFACE_TTY_PAIRS < <(find_tty_devices_by_interface "$VID" "$PID")
+
+if [[ ${#IFACE_TTY_PAIRS[@]} -eq 0 ]]; then
+    echo "Error: No tty devices found for VID=$VID PID=$PID" >&2
+    exit 2
+fi
+
+COM_PORTS=()
+MISSING=()
+
+for pair in "${IFACE_TTY_PAIRS[@]}"; do
+    ifnum=$(echo "$pair" | awk '{print $1}')
+    tty=$(echo "$pair"   | awk '{print $2}')
+
+    com=$(resolve_jrunner_comport "$tty")
+
+    if [[ -n "$com" ]]; then
+        COM_PORTS+=("$com")
+        echo "Interface ${ifnum}: /dev/${tty} -> ${com}"
+    else
+        MISSING+=("/dev/${tty} (interface ${ifnum})")
+        echo "Warning: /dev/${tty} (interface ${ifnum}) has no Wine COM port mapping" >&2
     fi
+done
 
-    return 1
-}
-
-COM_PORT=$(resolve_jrunner_comport "$TTY_DEV") || {
-    echo "Error: Device /dev/${TTY_DEV} found but no matching Wine COM port." >&2
-    echo "Make sure the device is mapped in your Wine prefix dosdevices or registry." >&2
+if [[ ${#COM_PORTS[@]} -eq 0 ]]; then
+    echo "Error: Devices found but none are mapped to a Wine COM port." >&2
+    echo "Make sure devices are mapped in your Wine prefix dosdevices or registry." >&2
     exit 3
-}
+fi
 
-# --- Write just the COM port name to the output file ---
-printf '%s' "$COM_PORT" > "$OUTPUT_FILE"
+if [[ ${#MISSING[@]} -gt 0 ]]; then
+    echo "Warning: ${#MISSING[@]} interface(s) had no COM port mapping and were skipped." >&2
+fi
 
-echo "Found: /dev/${TTY_DEV} -> ${COM_PORT}"
-echo "Written to: ${OUTPUT_FILE}"
+# Write one COM port per line, ordered by interface number, no trailing newline
+printf '%s\n' "${COM_PORTS[@]}" | head -c -1 > "$OUTPUT_FILE"
+
+echo "Written ${#COM_PORTS[@]} COM port(s) to: ${OUTPUT_FILE}"
