@@ -14,6 +14,7 @@ V3.4.0 r4:
 - Fixed: Decryption and extraction of loader stages for DD1, MFG CB_A, and non-zeropaired single CB images
 - Fixed: JTAG XeLL not being auto-deleted after writing if option to do so is enabled
 - Fixed: OG Xbox games are now functional on RGLoader
+- Fixed: Up to 2TB drives are now properly supported in 6717 and 1888 (Thanks @Eaton!)
 - Changed: Improved PicoFlasher COM port and eMMC detection
 - Changed: Updated RGH3 ECCs for Trinity and Corona for improved failure debugging
 - Changed: XSVFtool updated to version 1.2 for DirtyPico support
