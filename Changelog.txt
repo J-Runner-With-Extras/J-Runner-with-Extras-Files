@@ -3,14 +3,15 @@ J-Runner with Extras Changelog
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 V3.4.0 r4:
-- Added: BladesDL for 6717 glitch2m and DevGL. LiveBlock, OG Xbox/XeFu support, and pingpatch are now functional
-- Added: BladesDL now supports loading plugins on 1888 and 6717 (glitch2m and DevGL)
+- Added: BladesDL for 6717. LiveBlock, OG Xbox/XeFu support, and pingpatch are now functional
+- Added: BladesDL now supports loading plugins on 1888 and 6717
 - Added: DirtyPico support (https://github.com/phdussud/pico-dirtyJtag, thanks to Cheez for the initial changes)
 - Added: "Enable DevGL" wizard under the Advanced menu that works with the SDK in addition to SB_priv.bin
 - Added: Prototype corona ISD sounds under "common/sounds"
 - Added: Support for PicoFlasher under Wine on Linux
 - Added: Support for PicoFlasher V4 firmware (https://codeberg.org/hax360/PicoFlasher)
 - Fixed: Corona DevGL images not booting
+- Fixed: Decryption and extraction of loader stages for DD1, MFG CB_A, and non-zeropaired single CB images
 - Fixed: JTAG XeLL not being auto-deleted after writing if option to do so is enabled
 - Fixed: OG Xbox games are now functional on RGLoader
 - Changed: Improved PicoFlasher COM port and eMMC detection
