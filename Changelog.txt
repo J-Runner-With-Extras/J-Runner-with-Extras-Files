@@ -7,7 +7,7 @@ V3.4.0 r4:
 - Added: BladesDL now supports loading plugins on 1888 and 6717
 - Added: DirtyPico support (https://github.com/phdussud/pico-dirtyJtag, thanks to Cheez for the initial changes)
 - Added: "Enable DevGL" wizard under the Advanced menu that works with the SDK in addition to SB_priv.bin
-- Added: Prototype corona ISD sounds under "common/sounds"
+- Added: Prototype Corona ISD sounds under "common/sounds"
 - Added: Support for PicoFlasher under Wine on Linux
 - Added: Support for PicoFlasher V4 firmware (https://codeberg.org/hax360/PicoFlasher)
 - Fixed: Corona DevGL images not booting
@@ -18,7 +18,6 @@ V3.4.0 r4:
 - Changed: Improved PicoFlasher COM port and eMMC detection
 - Changed: Updated RGH3 ECCs for Trinity and Corona for improved failure debugging
 - Changed: XSVFtool updated to version 1.2 for DirtyPico support
-
 
 V3.4.0 r3:
 - Added: Experimental: XeLL Customizer
