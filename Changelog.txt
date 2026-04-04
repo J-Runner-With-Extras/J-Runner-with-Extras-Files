@@ -4,6 +4,7 @@ J-Runner with Extras Changelog
 
 V3.4.0 r5:
 - Fixed: Parsing of shadowboot images without an SMC program and/or without a KV
+- Fixed: RGLoader XAM patch set updated to fix auth for retail game discs
 
 V3.4.0 r4:
 - Added: BladesDL for 6717, LiveBlock, OG Xbox/XeFu support, and pingpatch are now functional
