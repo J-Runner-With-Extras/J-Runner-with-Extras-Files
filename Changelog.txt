@@ -2,6 +2,9 @@ J-Runner with Extras Changelog
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+V3.4.0 r5:
+- Fixed: Parsing of shadowboot images without an SMC program and/or without a KV
+
 V3.4.0 r4:
 - Added: BladesDL for 6717, LiveBlock, OG Xbox/XeFu support, and pingpatch are now functional
 - Added: BladesDL now supports loading plugins on 1888 and 6717
