@@ -3,6 +3,7 @@ J-Runner with Extras Changelog
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 V3.4.0 r5:
+- Fixed: E79 error for 6717 DevGL images
 - Fixed: Parsing of shadowboot images without an SMC program and/or without a KV
 
 V3.4.0 r4:
