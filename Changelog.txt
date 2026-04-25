@@ -3,6 +3,7 @@ J-Runner with Extras Changelog
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 V3.4.0 r5:
+- Changed: Combined 1838 DevGL and Glitch2m folders
 - Changed: nointmu and nohdmiwait no longer enabled by default for 17559 glitch2m/devgl
 - Fixed: E79 error for 6717 DevGL images
 - Fixed: Parsing of shadowboot images without an SMC program and/or without a KV
