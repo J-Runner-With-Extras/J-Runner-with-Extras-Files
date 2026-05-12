@@ -8,6 +8,7 @@ V3.4.0 r5:
 - Fixed: E79 error for 6717 DevGL images
 - Fixed: Parsing of shadowboot images without an SMC program and/or without a KV
 - Fixed: XeBuild image bug workaround now applies to all XSB consoles, resolving issues on 64mb Xenon and Jasper XSB
+- Fixed: XeLL is now able to enumerate USB devices attached after initial boot
 
 V3.4.0 r4:
 - Added: BladesDL for 6717, LiveBlock, OG Xbox/XeFu support, and pingpatch are now functional
