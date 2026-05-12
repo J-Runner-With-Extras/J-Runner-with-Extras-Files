@@ -6,17 +6,14 @@ Build and flash it like any other XDKBuild image. You'll need to be on the lates
 
 The 1838 kernel has the following restrictions:
 
-- Console: Phat only. Officially that means early serviced Xenon or Zephyr_A, but if you're crazy enough to install a Y1 on a tonasket it will proably work fine too.
-- GPU: Fixed Y1 is the *only* GPU that will work glitch free and at full performance. Defective Y1 or earlier GPUs will work too... but like... they're defective.
+- Console: Phat only for now.
+- GPU: Fixed Y1 is the only GPU that will work 100% glitch free. Rhea and Zeus are functional with the additional patches, but the EDRAM may occasionally fail to train and it will look like your GPU is failing. Don't panic (unless you've got a defective GPU ofc), reboot the system and it should be OK.
 - NAND: Devkit or Zero fuse supports both 16mb and 64mb. Due to xeBuild limitations, only 16mb is supported for glitch2m.
 
-> [!CAUTION]
-> If it wasn't clear, 1838 won't work properly unless you've got a Y1 GPU. When running on a Rhea or Zeus video output will randomly crash or glitch out as if you had a failing GPU. When it is not glitching, performance on Rhea and Zeus is 25% of what it is on a Y1
-
 > [!IMPORTANT]
-> Systems that use 16mb NAND chips must put the "1838-fs" folder on the root of the hard drive to be able to boot to dash or xshell. Unlike 17489, there's not enough room on the flash for a "base" set of files that can boot to a menu of some sort.
+> Systems that use 16mb NAND chips must put the "1838-fs" folder on the root of the hard drive to be able to boot to the real dashboard. The system will boot to xshell, and dash.xex has been replaced with a minimal launcher that can then load the real dash.xex (or another application) from a USB flash drive.
 >
-> In addition, kernel 1838 has zero support for retail formatted hard drives. It MUST be dev formatted. Xbox 360 neighborhood does work, so if you've got a dev formatted hard drive you can boot the system, and when it hangs at the end of the boot animation, copy the files over. Alternatively, you'll need to use a FATX injector program.
+> In addition, kernel 1838 has zero support for retail formatted hard drives. It MUST be dev formatted. Xbox 360 neighborhood does work, so if you've got a dev formatted hard drive you can boot the system and copy the files over. Alternatively, you'll need to use a FATX injector program.
 
 ## Preparing the hard drive with the zfBuild `hdd.tools.py`
 
@@ -38,6 +35,7 @@ As of the writing of this guide, you will need a linux environment with python3 
 ## Credits
 
 - sk1080 for help getting this going and for the hard drive script
+- Scar for help getting this working on Rhea and Zeus
 - XDKBuild VFuse patches and flag fixer: xvistaman2005
 - 360hub Discord Server - https://discord.gg/z9r3HMUxp7
 - RGLoader Discord Server - https://discord.gg/jTDT4rAh56
