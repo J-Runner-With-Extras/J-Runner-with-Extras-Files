@@ -15,6 +15,18 @@ The 1838 kernel has the following restrictions:
 >
 > In addition, kernel 1838 has zero support for retail formatted hard drives. It MUST be dev formatted. Xbox 360 neighborhood does work, so if you've got a dev formatted hard drive you can boot the system and copy the files over. Alternatively, you'll need to use a FATX injector program.
 
+## What's this about a dash.xex substitute?
+
+1838 is a bit of a weird situation- it doesn't support retail formatted hard drives, and xshell doesn't support loading anything from a flash drive. On 64mb machines you've got access to the dash and can format a drive, however on a 16mb machine there simply isn't enough room for the "real" dash.xex. That means you're effectively locked out of actually *doing anything* with the system unless you format a hard drive outside of the 360.
+
+This distribution of 1838 includes an xexmenu-style file browser under __nandfiles/dash.xex__ that can browse FAT32 formatted USB devices (in addition to the hard drive or flashfs) and launch xex or exe format applications. It can also launch XeLL from NAND (xell-gggggg.bin is stored in the flashfs)
+
+Does this count as the world's first XEX1 homebrew?
+
+## How do i install the dash.xex substitute?
+
+It is included in the flashfs of 16mb images by default, and can be added to the __DEVKIT__ folder of a hard drive so that 64mb machines (and 16mb machines with a hard drive) can access the same loader menu.
+
 ## Preparing the hard drive with the zfBuild `hdd.tools.py`
 
 > [!CAUTION]
