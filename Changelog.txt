@@ -3,8 +3,13 @@ J-Runner with Extras Changelog
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 V3.4.0 r5:
+- Changed: Combined 1838 DevGL and Glitch2m folders
+- Changed: nointmu and nohdmiwait no longer enabled by default for 17559 glitch2m/devgl
+- Fixed: E79 error for 6717 DevGL images
 - Fixed: Parsing of shadowboot images without an SMC program and/or without a KV
 - Fixed: RGLoader XAM patch set updated to fix auth for retail game discs
+- Fixed: XeBuild image bug workaround now applies to all XSB consoles, resolving issues on 64mb Xenon and Jasper XSB
+- Fixed: XeLL is now able to enumerate USB devices attached after initial boot
 
 V3.4.0 r4:
 - Added: BladesDL for 6717, LiveBlock, OG Xbox/XeFu support, and pingpatch are now functional
