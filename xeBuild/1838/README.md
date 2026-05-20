@@ -44,6 +44,12 @@ As of the writing of this guide, you will need a linux environment with python3 
    * Example: `sudo python3 hdd.tools.py --drive /dev/sdb --insert ~/Desktop/1838-fs`
 7. Optional: inject any folders containing tools with syntax similar to step 6. However, Xbox 360 neighborhood is fully supported in 1838 so you can alternatively boot the system and copy files over the network.
 
+## Troubleshooting
+
+If 1838 refuses to boot, or will boot but has weird behaviour, build an image with settings reset by selecting nomobile under `Options` > `Advanced XeBuild Options` > `nomobile`. It has been reported that using a retail NAND dump with family settings enabled to build an 1838 image will cause unexpected behaviour.
+
+If 1838 boots, but you encounter GPU artifacting or freezing, reboot the machine. Y1 GPUs are officially supported by 1838, but Rhea and later may occasionally fail to train the edram and display artifacting similar to a failing GPU. Driver changes in later versions of the kernel resolve this.  
+
 ## Credits
 
 - sk1080 for help getting this going and for the hard drive script
