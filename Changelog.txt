@@ -11,6 +11,7 @@ V3.4.0 r5:
 - Fixed: 1838 now boots to xshell on a 16mb system when the hard drive is not attached
 - Fixed: E79 error for 6717 DevGL images
 - Fixed: Parsing of shadowboot images without an SMC program and/or without a KV
+- Fixed: Resolve "Console not found" errors on corona with PicoFlasher + EMMC interface 
 - Fixed: RGLoader XAM patch set updated to fix auth for retail game discs
 - Fixed: XeBuild image bug workaround now applies to all XSB consoles, resolving issues on 64mb Xenon and Jasper XSB
 - Fixed: XeLL is now able to enumerate USB devices attached after initial boot
