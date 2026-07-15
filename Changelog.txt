@@ -2,6 +2,13 @@ J-Runner with Extras Changelog
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+V3.4.0 r6:
+- Added: XeLL kboot.conf now supports omitting the drive prefix for boot file paths
+- Changed: XeLL theme customizer removed
+- Changed: XeLL included with JRunner is now fully built from upstream (with TFTP support turned off)
+- Fixed: XeLL will no longer print warnings for newlines in the kboot.conf
+- Fixed: XeLL now shows the console type
+
 V3.4.0 r5:
 - Added: Support for 1838 on systems with Rhea and Gunga GPUs (Thanks to Scar (kavkazsila) for the graphics driver patches!)
 - Added: dash.xex substitute in flash for 16mb 1838 images to allow loading executables from USB or other media
