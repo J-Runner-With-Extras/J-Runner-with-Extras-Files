@@ -4,9 +4,10 @@ J-Runner with Extras Changelog
 
 V3.4.0 r8:
 
-- Added: Dashboard 6770 has replaced dashboard 6717
+- Added: Zeus/Kronos GPU patch option for Xenon/Zephyr/Falcon with a Zeus or Kronos GPU retrofit
+- Changed: Dashboard 6770 has replaced dashboard 6717
 - Changed: All patch sets now use the memory protection patch from PeerPressure that does not require toggling
-- Changed: The usbdsec patch, CoronaKeysFix, and HvFixKeys patches are built in to the patch file for all dashboards
+- Changed: The usbdsec patch, CoronaKeysFix, and HvFixKeys patches are built in to the patch file for all dashboards. Toggle checkboxes have been removed.
 - Changed: RGLoader KDNet timeout changed back to the default setting
 - Changed: RGLoader no longer attempts to load xbdm.xex from the root of the hard drive
 - Fixed: Corona WB glitch2m patch 
